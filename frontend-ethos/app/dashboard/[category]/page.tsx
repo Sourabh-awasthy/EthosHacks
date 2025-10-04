@@ -4,14 +4,17 @@ import { UniversalSearch } from "@/components/universal-search"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, TrendingUp, TrendingDown, Activity } from "lucide-react"
-import { useRouter, useParams } from "next/navigation"
+import { useRouter, useParams, useSearchParams } from "next/navigation"
 import { Line, LineChart, Bar, BarChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 
 export default function DashboardPage() {
   const router = useRouter()
   const params = useParams()
+  const searchParams = useSearchParams()
   const category = params.category as string
+  const entityType = searchParams.get("type")
+  const location = searchParams.get("location")
 
   // Sample data for charts
   const activityData = [
@@ -32,7 +35,23 @@ export default function DashboardPage() {
   ]
 
   const getCategoryTitle = () => {
+    if (entityType) {
+      return `${entityType.charAt(0).toUpperCase() + entityType.slice(1)} Dashboard`
+    }
+    if (location) {
+      return `${location.charAt(0).toUpperCase() + location.slice(1)} Dashboard`
+    }
     return category.charAt(0).toUpperCase() + category.slice(1)
+  }
+
+  const handleBack = () => {
+    if (category === "entities") {
+      router.push("/select-entity")
+    } else if (category === "locations") {
+      router.push("/select-location")
+    } else {
+      router.push("/")
+    }
   }
 
   return (
@@ -42,12 +61,14 @@ export default function DashboardPage() {
       <div className="container mx-auto px-6 pt-28 pb-16">
         {/* Header */}
         <div className="mb-8">
-          <Button variant="ghost" onClick={() => router.push("/")} className="mb-4 -ml-2">
+          <Button variant="ghost" onClick={handleBack} className="mb-4 -ml-2">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Overview
+            Back
           </Button>
-          <h1 className="text-4xl font-bold mb-2">{getCategoryTitle()} Dashboard</h1>
-          <p className="text-muted-foreground">Real-time monitoring and analytics for {category}</p>
+          <h1 className="text-4xl font-bold mb-2">{getCategoryTitle()}</h1>
+          <p className="text-muted-foreground">
+            Real-time monitoring and analytics for {entityType || location || category}
+          </p>
         </div>
 
         {/* Key Metrics */}
@@ -109,15 +130,22 @@ export default function DashboardPage() {
                     color: "hsl(var(--chart-1))",
                   },
                 }}
-                className="h-[300px]"
+                className="h-[300px] chart-container"
               >
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={activityData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" />
-                    <YAxis stroke="hsl(var(--muted-foreground))" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--chart-grid))" opacity={0.3} />
+                    <XAxis dataKey="time" stroke="hsl(var(--chart-text))" fontSize={12} />
+                    <YAxis stroke="hsl(var(--chart-text))" fontSize={12} />
                     <ChartTooltip content={<ChartTooltipContent />} />
-                    <Line type="monotone" dataKey="value" stroke="var(--color-value)" strokeWidth={2} dot={false} />
+                    <Line
+                      type="monotone"
+                      dataKey="value"
+                      stroke="var(--color-value)"
+                      strokeWidth={3}
+                      dot={{ fill: "var(--color-value)", r: 4 }}
+                      activeDot={{ r: 6 }}
+                    />
                   </LineChart>
                 </ResponsiveContainer>
               </ChartContainer>
@@ -137,13 +165,13 @@ export default function DashboardPage() {
                     color: "hsl(var(--chart-2))",
                   },
                 }}
-                className="h-[300px]"
+                className="h-[300px] chart-container"
               >
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={distributionData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
-                    <YAxis stroke="hsl(var(--muted-foreground))" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--chart-grid))" opacity={0.3} />
+                    <XAxis dataKey="name" stroke="hsl(var(--chart-text))" fontSize={12} />
+                    <YAxis stroke="hsl(var(--chart-text))" fontSize={12} />
                     <ChartTooltip content={<ChartTooltipContent />} />
                     <Bar dataKey="value" fill="var(--color-value)" radius={[8, 8, 0, 0]} />
                   </BarChart>

@@ -10,9 +10,18 @@ interface GradientBlobProps {
   gradient: string
   onClick: () => void
   delay?: number
+  isZooming?: boolean
 }
 
-export function GradientBlob({ title, description, icon: Icon, gradient, onClick, delay = 0 }: GradientBlobProps) {
+export function GradientBlob({
+  title,
+  description,
+  icon: Icon,
+  gradient,
+  onClick,
+  delay = 0,
+  isZooming = false,
+}: GradientBlobProps) {
   const [isHovered, setIsHovered] = useState(false)
 
   return (
@@ -20,7 +29,9 @@ export function GradientBlob({ title, description, icon: Icon, gradient, onClick
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="group relative w-full aspect-square rounded-3xl overflow-hidden transition-all duration-500 hover:scale-105"
+      className={`group relative w-full aspect-square rounded-3xl overflow-hidden transition-all duration-500 hover:scale-105 ${
+        isZooming ? "scale-zoom-animation" : ""
+      }`}
       style={{
         animationDelay: `${delay}ms`,
       }}
