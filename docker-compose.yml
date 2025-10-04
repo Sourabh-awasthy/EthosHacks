@@ -1,0 +1,54 @@
+services:
+  frontend:
+    build:
+      context: ./frontend-ethos
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    networks:
+      - ethos-network
+
+  backend:
+    build:
+      context: ./backend-ethos
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://user:password@db:5432/ethosdb?sslmode=disable
+    networks:
+      - ethos-network
+
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=ethosdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend-ethos/schema.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - '5433:5432'
+    networks:
+      - ethos-network
+
+  alerter:
+    build:
+      context: ./alerter-ethos
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://user:password@db:5432/ethosdb?sslmode=disable
+    networks:
+      - ethos-network
+
+volumes:
+  postgres_data:
+
+networks:
+  ethos-network:
+    driver: bridge
