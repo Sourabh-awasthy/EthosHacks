@@ -141,10 +141,10 @@ export default function DashboardPage() {
                     <Line
                       type="monotone"
                       dataKey="value"
-                      stroke="var(--color-value)"
+                      stroke="var(--color-value1)"
                       strokeWidth={3}
-                      dot={{ fill: "var(--color-value)", r: 4 }}
-                      activeDot={{ r: 6 }}
+                      dot={{ fill: "var(--color-value)", r: 5 }}
+                      activeDot={{ r: 7 }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
@@ -173,7 +173,7 @@ export default function DashboardPage() {
                     <XAxis dataKey="name" stroke="hsl(var(--chart-text))" fontSize={12} />
                     <YAxis stroke="hsl(var(--chart-text))" fontSize={12} />
                     <ChartTooltip content={<ChartTooltipContent />} />
-                    <Bar dataKey="value" fill="var(--color-value)" radius={[8, 8, 0, 0]} />
+                    <Bar dataKey="value" fill="var(--color-value1)" radius={[8, 8, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </ChartContainer>

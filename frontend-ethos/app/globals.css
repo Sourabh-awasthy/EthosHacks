@@ -24,6 +24,7 @@
   --border: oklch(0.22 0.01 240);
   --input: oklch(0.22 0.01 240);
   --ring: oklch(0.62 0.22 250);
+  --color-value1: #56565a;
 
   --chart-1: oklch(0.7 0.28 250);
   --chart-2: oklch(0.68 0.25 200);
@@ -33,7 +34,7 @@
 
   --chart-background: oklch(0.95 0.005 240);
   --chart-grid: oklch(0.75 0.01 240);
-  --chart-text: oklch(0.25 0.01 240);
+  --chart-text: oklch(98.546% 0.00763 242.081);
 
   --radius: 0.75rem;
   --sidebar: oklch(0.13 0.01 240);
