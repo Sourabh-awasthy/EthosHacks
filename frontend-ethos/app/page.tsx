@@ -12,10 +12,16 @@ export default function HomePage() {
 
   const handleBlobClick = (category: string) => {
     setZoomingBlob(category)
-    // Wait for animation to complete before navigation
+
     setTimeout(() => {
-      router.push(`/dashboard/${category}`)
-    }, 800)
+      if (category === "entities") {
+        router.push("/select-entity")
+      } else if (category === "locations") {
+        router.push("/select-location")
+      } else {
+        router.push(`/dashboard/${category}`)
+      }
+    }, 600)
   }
 
   const blobs = [
@@ -70,7 +76,7 @@ export default function HomePage() {
           {blobs.map((blob, index) => (
             <div
               key={blob.id}
-              className={`fade-in-animation ${zoomingBlob === blob.id ? "blob-zoom-animation" : ""}`}
+              className="fade-in-animation"
               style={{
                 animationDelay: `${index * 100}ms`,
               }}
@@ -82,6 +88,7 @@ export default function HomePage() {
                 gradient={blob.gradient}
                 onClick={() => handleBlobClick(blob.id)}
                 delay={index * 100}
+                isZooming={zoomingBlob === blob.id}
               />
             </div>
           ))}

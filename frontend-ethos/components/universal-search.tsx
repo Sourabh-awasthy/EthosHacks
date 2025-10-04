@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import { Search, Filter, MapPin, Users, Building2, AlertTriangle } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -10,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 export function UniversalSearch() {
   const [filters, setFilters] = useState({
@@ -18,28 +21,55 @@ export function UniversalSearch() {
     assets: true,
     anomalies: true,
   })
+  const [searchQuery, setSearchQuery] = useState("")
+  const router = useRouter()
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      router.push(`/profile?q=${encodeURIComponent(searchQuery)}`)
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch()
+    }
+  }
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
       <div className="container mx-auto px-6 py-4">
-        <div className="flex items-center gap-4">
+        {/* Use justify-between to space out the logo, search bar, and filter button */}
+        <div className="flex items-center justify-between gap-4">
+          {/* === Left Item: Logo === */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
                 <div className="w-4 h-4 rounded bg-primary" />
               </div>
-              <span className="font-semibold text-lg">Saptang</span>
+              <span className="font-semibold text-lg">EthosHacks</span>
             </div>
           </div>
 
-          <div className="flex-1 relative max-w-2xl">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder="Search entities, locations, assets, or anomalies..."
-              className="pl-10 pr-4 h-11 bg-secondary/50 border-border focus-visible:ring-primary"
-            />
+          {/* === Center Item: Search Bar === */}
+          {/* Removed 'flex-1' to prevent it from pushing other items away */}
+          <div className="relative w-full max-w-2xl flex items-center gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                placeholder="Search entities, locations, assets, or anomalies..."
+                className="pl-10 pr-4 h-11 bg-secondary/50 border-border focus-visible:ring-primary"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
+            </div>
+            <Button onClick={handleSearch} className="h-11 px-6">
+              Search
+            </Button>
           </div>
 
+          {/* === Right Item: Filter Button === */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon" className="h-11 w-11 bg-transparent">
