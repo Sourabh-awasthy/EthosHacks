@@ -14,7 +14,7 @@ export default function SelectEntityPage() {
   const handleEntitySelect = (type: string) => {
     setSelectedType(type)
     setTimeout(() => {
-      router.push(`/dashboard/entities?type=${type}`)
+      router.push(`/entities/${type}`)
     }, 600)
   }
 
