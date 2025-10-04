@@ -1,4 +1,4 @@
-package main
+package scripts
 
 import (
 	"context"
@@ -147,4 +147,3 @@ func generatePlaceholders(count int) string {
 	}
 	return strings.Join(placeholders, ",")
 }
-
